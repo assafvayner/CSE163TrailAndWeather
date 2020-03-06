@@ -45,21 +45,16 @@ def pseudo_clock_NN(df):
     y = df['HOUR']
     X = pd.get_dummies(X)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
-    min_n = 5
-    min_error_sum = 200
-    for num_hidden in range(5,100):
-        model = MLPRegressor(num_hidden)
-        model.fit(X_train, y_train)
-        y_pred_train = model.predict(X_train)
-        y_pred_test = model.predict(X_test)
-        print('peudo_clock_NN with num_hidden: ' + str(num_hidden))
-        error_train = mean_squared_error(y_train, y_pred_train)
-        print(f'training set MSE: {error_train}')
-        error_test = mean_squared_error(y_test, y_pred_test)
-        print(f'test set MSE: {error_test}')
-        if min_error_sum > error_test + error_train:
-            min_n = num_hidden
-    print(f'minimum hidden layers: {min_n}')
+    num_hidden = 200
+    model = MLPRegressor(num_hidden)
+    model.fit(X_train, y_train)
+    y_pred_train = model.predict(X_train)
+    y_pred_test = model.predict(X_test)
+    print('peudo_clock_NN with num_hidden: ' + str(num_hidden))
+    error_train = mean_squared_error(y_train, y_pred_train)
+    print(f'training set MSE: {error_train}')
+    error_test = mean_squared_error(y_test, y_pred_test)
+    print(f'test set MSE: {error_test}')
 
 
 

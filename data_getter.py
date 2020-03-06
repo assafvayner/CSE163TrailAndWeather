@@ -2,11 +2,20 @@ import pandas as pd
 
 class DataGetter:
     def get_data(self):
+        return self.get_trail_data(), self.get_weather_data()
+
+
+    def get_trail_data(self):
         trail_df = pd.read_csv('data/Burke_Gilman_Trail_north_of_NE_70th_St_Bicycle_and_Pedestrian_Counter.csv')
         trail_df = self._clean_trail_data(trail_df)
+        return trail_df
+    
+
+    def get_weather_data(self):
         weather_df = pd.read_csv('data/seattle-weather.csv')
         weather_df = self._clean_weather_data(weather_df)
-        return trail_df, weather_df
+        return weather_df
+
 
     def _clean_weather_data(self, df):
         time = df.date.str.split('/', expand=True)
@@ -15,6 +24,7 @@ class DataGetter:
         time = time.astype(int)
         df[['YEAR', 'MONTH', 'DAY']] = time
         return df
+
 
     def _clean_trail_data(self, df):
         time = df.Date.str.split(expand=True)
@@ -27,6 +37,7 @@ class DataGetter:
         # df['DAY_OF_YEAR'] = (df['MONTH'] - 1) * 31 + df['DAY']
         return df
 
+
     def _get_time_of_day_series(self, date):
         time = date.TIME.str.split(':', expand=True)
         time = time[0].astype(int)
@@ -35,6 +46,7 @@ class DataGetter:
         # midnight is referenced as hour being 0
         time = time.where(~((date['AM_PM'] == 'AM') & (time == 12)), 0)
         return time
+
 
     def merge_dataframes(self, trail_df, weather_df):
         return pd.merge(trail_df, weather_df,how='inner',on=['YEAR', 'MONTH', 'DAY'])
