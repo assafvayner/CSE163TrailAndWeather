@@ -13,13 +13,18 @@ def graph_months(df):
         month_df = gb[month + 1]
         ax = axs[month // 4][month % 4]
         data = month_df.groupby('DAY', as_index=False)[month_df.columns[:5]].mean()
-        ax.set_title(month_name(month, False))
+        graph_titles(ax, month)
         sns.barplot(x='DAY', y='Total', data=data, ax=ax)
         ax = axs[(month + 12) // 4][(month + 12) % 4]
-        ax.set_title(month_name(month, False))
-        ax.xlabel()
+        graph_titles(ax, month)
         sns.lineplot(x='DAY', y='Total', data=data, ax=ax)
     fig.savefig('plots/monthly.png')
+
+
+def graph_titles(ax, month):
+    ax.set_title(month_name(month, False))
+    ax.set_xlabel('Day of the Month')
+    ax.set_ylabel('Total Bikers and Pedestrians both directions')
 
 
 def month_name(n, Jan_is_One=True):
@@ -48,7 +53,7 @@ def main():
     dg = DataGetter()
     trail_data = dg.get_trail_data()
     # graph_months(trail_data)
-    lowest_per_month(trail_data)
+    # lowest_per_month(trail_data)
 
 
 if __name__ == '__main__':
