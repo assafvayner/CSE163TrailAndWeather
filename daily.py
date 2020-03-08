@@ -8,24 +8,24 @@ import seaborn as sns
 
 
 def graph_by_hour(data):
-    #data = data[data['Total'] < 1000]
-    #data = data.groupby('HOUR').mean()
-    data = data.loc[:23]
+    # data = data[data['Total'] < 1000]
+    data = data.groupby('HOUR', as_index=False).mean()
+    # data = data.loc[:23]
     # test_data = data.loc[:, ['Total', 'HOUR']]
     # data = data['Total']
-    # sns.catplot(x='HOUR', y='Total', data=test_data, kind='bar')
-    data = data['Total']
-    
-    data.plot(kind='bar')
+    sns.catplot(x='HOUR', y='Total', data=data, kind='bar')
+    # data = data['Total']
+
+    # data.plot(kind='bar')
+    data = data[data['HOUR'] == 12]
+    print(data)
     plt.savefig('test.png')
-    # print(test_data)
 
 
 def main():
     dg = DataGetter()
     df = dg.get_trail_data()
     sns.set()
-    # print(df)
     graph_by_hour(df)
 
 
