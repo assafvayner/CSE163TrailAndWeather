@@ -42,18 +42,19 @@ def month_name(n, Jan_is_One=True):
 def lowest_per_month(df, month=None):
     if month is None:
         res = dict()
-        gb = df.groupby('MONTH')
-        gb = dict(list(gb))
-        for m in range(12):
-            month_df = gb[m + 1]
-            v = month_df['Total'].min()
-            print(v)
+        grouped_by_month = df.groupby('MONTH')
+        # gb = dict(list(gb))
+        for k, gb in grouped_by_month:
+            a = gb.groupby(['HOUR', 'DAY'], as_index=False).mean()
+            res[k] = a['Total'].idxmin()
+        print(res)
+            
 
 def main():
     dg = DataGetter()
     trail_data = dg.get_trail_data()
     # graph_months(trail_data)
-    # lowest_per_month(trail_data)
+    lowest_per_month(trail_data)
 
 
 if __name__ == '__main__':
