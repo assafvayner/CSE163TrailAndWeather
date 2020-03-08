@@ -66,4 +66,7 @@ class DataGetter:
         return round(y + y/4 - y/100 + y/400 + t[m-1] + d) % 7
 
     def merge_dataframes(self, trail_df, weather_df):
-        return pd.merge(trail_df, weather_df,how='inner',on=['YEAR', 'MONTH', 'DAY'])
+        merge_terms = ['YEAR', 'MONTH', 'DAY']
+        if 'DAY_OF_WEEK' in trail_df.columns and 'DAY_OF_WEEK' in weather_df.columns:
+            merge_terms.append('DAY_OF_WEEK')
+        return pd.merge(trail_df, weather_df,how='inner',on=merge_terms)

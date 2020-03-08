@@ -10,8 +10,7 @@ from sklearn.neural_network import MLPClassifier, MLPRegressor
 
 def pseudo_clock(df):
     df = df.dropna()
-    X = df.loc[:, 'Total':'DAY']
-    X = X.loc[:, X.columns != 'HOUR']
+    X = df.loc[:, (df.columns != 'HOUR')]
     y = df['HOUR']
     X = pd.get_dummies(X)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
@@ -26,8 +25,7 @@ def pseudo_clock(df):
 
 def pseudo_clock_NN(df):
     df = df.dropna()
-    X = df.loc[:, 'Total':'DAY']
-    X = X.loc[:, X.columns != 'HOUR']
+    X = df.loc[:, df.columns != 'HOUR']
     y = df['HOUR']
     X = pd.get_dummies(X)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
@@ -47,8 +45,7 @@ def main():
     trail_df, weather_df = data_getter.get_data()
     merged = data_getter.merge_dataframes(trail_df, weather_df)
     # utils.print_heads(trail_df, weather_df, merged)
-    print('merged')
-    pseudo_clock(merged)
+    # pseudo_clock(merged)
     pseudo_clock_NN(merged)
     # print('trail data')
     # pseudo_clock(trail_df)
