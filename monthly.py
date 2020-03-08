@@ -13,9 +13,8 @@ def graph_months(df):
         month_df = gb[month + 1]
         ax = axs[month // 4][month % 4]
         data = month_df.groupby('DAY', as_index=False)[month_df.columns[:5]].mean()
-        # data.plot(x='DAY', y='Total', ax=ax, kind='line')
         ax.set_title(month_name(month, False))
-        sns.barplot(x='DAY', y='Total', data=data, ax=ax)#, size=100)
+        sns.barplot(x='DAY', y='Total', data=data, ax=ax)
         ax = axs[(month + 12) // 4][(month + 12) % 4]
         ax.set_title(month_name(month, False))
         ax.xlabel()
