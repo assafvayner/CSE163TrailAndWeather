@@ -13,9 +13,12 @@ def print_heads(trail_df=None, weather_df=None, merged=None):
     if trail_df is not None:
         print('trail_df')
         print(trail_df.head())
+        print()
     if weather_df is not None:
         print('weather_df')
         print(weather_df.head())
+        print()
     if  merged is not None:
         print('merged')
         print(merged.head())
+        print()
