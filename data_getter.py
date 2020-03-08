@@ -42,9 +42,9 @@ class DataGetter:
         time = date.TIME.str.split(':', expand=True)
         time = time[0].astype(int)
         # convert to 24 hour format
-        time = time.where(date['AM_PM'] == 'AM', time.add(12))
-        # midnight is referenced as hour being 0
-        time = time.where(~((date['AM_PM'] == 'AM') & (time == 12)), 0)
+        time = time.where((date['AM_PM'] == 'AM') & (time != 12), time.add(12))
+        # midnight is referenced as hour being 24
+        time = time.where(~((date['AM_PM'] == 'AM') & (time == 12)), 24)
         return time
 
 
