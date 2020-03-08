@@ -1,22 +1,44 @@
 import pandas as pd
 import numpy as np
 
+
 class DataGetter:
     def get_data(self, day_of_week=True):
-        return self.get_trail_data(day_of_week), self.get_weather_data(day_of_week)
-
+        trail_df = self.get_trail_data(day_of_week)
+        weather_df = self.get_weather_data(day_of_week)
+        return trail_df, weather_df
 
     def get_trail_data(self, day_of_week=True):
         trail_df = pd.read_csv('data/Burke_Gilman_Trail_north_of_NE_70th_St_Bicycle_and_Pedestrian_Counter.csv')
         trail_df = self._clean_trail_data(trail_df, day_of_week)
+        trail_df = self._remove_in_trail_data(trail_df)
         return trail_df
-    
+
+    def _remove_in_trail_data(self, df):
+        df = self._remove(df, 2018, [6, 7, 8])
+        df = self._remove(df, 2018, 5, [30, 31])
+        df = self._remove(df, 2018, 9, range(1, 7))
+        return df
+
+    def _remove(self, df, years, months=range(1, 13), days=range(1, 32)):
+        if isinstance(days, int):
+            days = [days]
+        if isinstance(months, int):
+            months = [months]
+        if isinstance(years, int):
+            years = [years]
+        for day in days:
+            for month in months:
+                for year in years:
+                    # print(f'day: {day}, month: {month}, year: {year}')
+                    df = df[~((df['DAY'] == day) & (df['MONTH'] == month) &
+                              (df['YEAR'] == year))]
+        return df
 
     def get_weather_data(self, day_of_week=True):
         weather_df = pd.read_csv('data/seattle-weather.csv')
         weather_df = self._clean_weather_data(weather_df, day_of_week)
         return weather_df
-
 
     def _clean_weather_data(self, df, day_of_week):
         time = df.date.str.split('/', expand=True)
@@ -27,13 +49,12 @@ class DataGetter:
         self._add_day_of_week(df, day_of_week)
         return df
 
-
     def _clean_trail_data(self, df, day_of_week):
         time = df.Date.str.split(expand=True)
         time.columns = ['DATE', 'TIME', 'AM_PM']
         df['HOUR'] = self._get_time_of_day_series(time.loc[:, 'TIME':'AM_PM'])
         df[['MONTH', 'DAY', 'YEAR']] = time['DATE'].str.split("/", expand=True)
-        df = df.rename(columns={'BGT North of NE 70th Total':'Total'})
+        df = df.rename(columns={'BGT North of NE 70th Total': 'Total'})
         df = df.loc[:, 'Total':'YEAR']
         df = df.apply(pd.to_numeric)
         df = self._add_day_of_week(df, day_of_week)
@@ -41,9 +62,10 @@ class DataGetter:
 
     def _add_day_of_week(self, df, day_of_week):
         if day_of_week:
-            df['DAY_OF_WEEK'] = np.vectorize(self._day_of_week)(df['DAY'], df['MONTH'], df['YEAR']).astype(int)
+            d_o_w = np.vectorize(self._day_of_week)
+            temp_ser = d_o_w(df['DAY'], df['MONTH'], df['YEAR']).astype(int)
+            df['DAY_OF_WEEK'] = temp_ser
         return df
-
 
     def _get_time_of_day_series(self, date):
         time = date.TIME.str.split(':', expand=True)
@@ -53,7 +75,6 @@ class DataGetter:
         # midnight is referenced as hour being 24
         time = time.where(~((date['AM_PM'] == 'AM') & (time == 12)), 24)
         return time
-
 
     def _day_of_week(self, d, m, y):
         """
@@ -67,6 +88,7 @@ class DataGetter:
 
     def merge_dataframes(self, trail_df, weather_df):
         merge_terms = ['YEAR', 'MONTH', 'DAY']
-        if 'DAY_OF_WEEK' in trail_df.columns and 'DAY_OF_WEEK' in weather_df.columns:
+        if 'DAY_OF_WEEK' in trail_df.columns and 'DAY_OF_WEEK' in \
+                weather_df.columns:
             merge_terms.append('DAY_OF_WEEK')
-        return pd.merge(trail_df, weather_df,how='inner',on=merge_terms)
+        return pd.merge(trail_df, weather_df, how='inner', on=merge_terms)
