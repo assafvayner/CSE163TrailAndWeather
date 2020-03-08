@@ -13,13 +13,17 @@ def graph_by_hour(data):
     # data = data.loc[:23]
     # test_data = data.loc[:, ['Total', 'HOUR']]
     # data = data['Total']
-    sns.catplot(x='HOUR', y='Total', data=data, kind='bar')
+    fig, ax = plt.subplots(1, figsize=(10, 5))
+    sns.catplot(ax=ax, x='HOUR', y='Total', data=data, kind='bar')
+    ax.set_title('People on the Burke Gillman Trail by Hour')
+    ax.set_xlabel('Hour')
+    ax.set_ylabel('Number of People')
     # data = data['Total']
 
     # data.plot(kind='bar')
-    data = data[data['HOUR'] == 12]
-    print(data)
-    plt.savefig('test.png')
+    # data = data[data['HOUR'] == 12]
+    # print(data)
+    fig.savefig('plots/test.png')
 
 
 def main():
