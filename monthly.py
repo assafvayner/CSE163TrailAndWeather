@@ -25,6 +25,7 @@ def graph_titles(ax, month):
     ax.set_title(month_name(month, False))
     ax.set_xlabel('Day of the Month')
     ax.set_ylabel('Total Bikers and Pedestrians both directions')
+    ax.set(ylim=(0, 500))
 
 
 def month_name(n, Jan_is_One=True):
@@ -40,15 +41,18 @@ def month_name(n, Jan_is_One=True):
             'December')[n - Jan_is_One]
 
 def lowest_per_month(df, month=None):
+    res = dict()
+    grouped_by_month = df.groupby('MONTH')
+    # gb = dict(list(gb))
+    for k, gb in grouped_by_month:
+        by_day_and_hour = gb.groupby(['HOUR', 'DAY'], as_index=False).mean()
+        min_idx = by_day_and_hour['Total'].idxmin()
+        res[k] = {'DAY':by_day_and_hour.loc[min_idx, 'DAY'],
+                    'HOUR':by_day_and_hour.loc[min_idx, 'HOUR']}
     if month is None:
-        res = dict()
-        grouped_by_month = df.groupby('MONTH')
-        # gb = dict(list(gb))
-        for k, gb in grouped_by_month:
-            a = gb.groupby(['HOUR', 'DAY'], as_index=False).mean()
-            res[k] = a['Total'].idxmin()
-        print(res)
-            
+        return res
+    return res[month_to_index(month)]
+    
 
 def main():
     dg = DataGetter()
