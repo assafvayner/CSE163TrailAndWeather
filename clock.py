@@ -1,12 +1,10 @@
 from data_getter import DataGetter
-import utils
 import pandas as pd
-import numpy as np
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, accuracy_score
-from sklearn.neural_network import MLPClassifier, MLPRegressor
+from sklearn.metrics import mean_squared_error
+from sklearn.neural_network import MLPRegressor
+
 
 def pseudo_clock(df):
     df = df.dropna()
@@ -25,7 +23,7 @@ def pseudo_clock(df):
 
 def pseudo_clock_NN(df):
     df = df.dropna()
-    X = df.loc[:, df.columns != 'HOUR']#'Total':'Bike South']#
+    X = df.loc[:, df.columns != 'HOUR']  # 'Total':'Bike South']#
     y = df['HOUR']
     X = pd.get_dummies(X)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
@@ -40,6 +38,7 @@ def pseudo_clock_NN(df):
     error_test = mean_squared_error(y_test, y_pred_test)
     print(f'test set MSE: {error_test}')
 
+
 def main():
     data_getter = DataGetter()
     trail_df, weather_df = data_getter.get_data()
@@ -51,7 +50,7 @@ def main():
     print('trail data')
     pseudo_clock(trail_df)
     pseudo_clock_NN(trail_df)
-    
+
 
 if __name__ == '__main__':
     main()
