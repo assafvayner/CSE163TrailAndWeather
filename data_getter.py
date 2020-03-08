@@ -36,12 +36,13 @@ class DataGetter:
         df = df.rename(columns={'BGT North of NE 70th Total':'Total'})
         df = df.loc[:, 'Total':'YEAR']
         df = df.apply(pd.to_numeric)
-        self._add_day_of_week(df, day_of_week)
+        df = self._add_day_of_week(df, day_of_week)
         return df
 
     def _add_day_of_week(self, df, day_of_week):
         if day_of_week:
-            df['DAY_OF_YEAR'] = np.vectorize(self._day_of_week)(df['DAY'], df['MONTH'], df['YEAR'])
+            df['DAY_OF_WEEK'] = np.vectorize(self._day_of_week)(df['DAY'], df['MONTH'], df['YEAR']).astype(int)
+        return df
 
 
     def _get_time_of_day_series(self, date):

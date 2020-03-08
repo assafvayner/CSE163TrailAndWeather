@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 
 def weather_predictor(df):
     df = df.dropna()
-    X = df.loc[:, 'Total':'YEAR']#(df.columns != 'weather')] #
+    X = df.loc[:, 'Total':'DAY_OF_WEEK']#(df.columns != 'weather')] #
     y = df['weather']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.1)
     model = DecisionTreeClassifier()
@@ -27,6 +27,7 @@ def main():
     trail_df, weather_df = data_getter.get_data()
     merged = data_getter.merge_dataframes(trail_df, weather_df)
     utils.print_heads(trail_df, weather_df, merged)
+    print(merged.columns)
     weather_predictor(merged)
     
 
