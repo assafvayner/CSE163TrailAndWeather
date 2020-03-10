@@ -8,7 +8,7 @@ import seaborn as sns
 def graph_by_hour(data):
     data = data.groupby('HOUR', as_index=False).mean()
     fig, ax = plt.subplots(1, figsize=(6, 4))
-    sns.catplot(ax=ax, x='HOUR', y='Total', data=data, kind='bar')
+    sns.barplot(ax=ax, x='HOUR', y='Total', data=data)
     ax.set_title('People on the Burke Gillman Trail by Hour')
     ax.set_xlabel('Hour')
     ax.set_ylabel('Number of People')
