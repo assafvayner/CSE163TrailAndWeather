@@ -59,9 +59,12 @@ def plot_pattern(df):
     morning_data = (df['HOUR']>= 7) & (df['HOUR']<= 10)
     evening_data = (df['HOUR']>= 16) & (df['HOUR']<= 19)
     df = df[(morning_data | evening_data) & days_of_week]
-    df['B_S-B_N'] = df.loc[:, 'Bike South'] - df.loc[:, 'Bike North']
+    df['diff'] = df.loc[:, 'Bike South'] - df.loc[:, 'Bike North']
     filtered_df = df.groupby(['HOUR'], as_index=False).mean()
-    filtered_df.plot(x='HOUR', y='B_S-B_N', kind='bar')
+    filtered_df.plot(x='HOUR', y='diff', color = 'b', kind='bar')
+    plt.title("Pattern of commuting days")
+    plt.xlabel('Hour')
+    plt.ylabel('Difference bettwen bike south and bike north')
     plt.savefig('plots/test.png')
 
 def main():
