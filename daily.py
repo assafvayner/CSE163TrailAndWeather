@@ -1,4 +1,4 @@
-from data_getter import DataGetter
+import data_getter as dg
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -16,7 +16,6 @@ def graph_by_hour(data):
 
 
 def main():
-    dg = DataGetter()
     df = dg.get_trail_data()
     sns.set()
     graph_by_hour(df)
