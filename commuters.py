@@ -12,8 +12,8 @@ git push
 
 
 def commute_pattern(df):
-    is_0 = df['DAY_OF_WEEK'] == 0
-    is_6 = df['DAY_OF_WEEK'] == 6
+    #is_0 = df['DAY_OF_WEEK'] == 0
+    #is_6 = df['DAY_OF_WEEK'] == 6
     morning_data = df[(df['HOUR']>= 7) & (df['HOUR']<= 10)& (df['DAY_OF_WEEK']>0)& (df['DAY_OF_WEEK']<6)]
     #morning_data = morning_data[is_0| is_6]
     evening_data = df[(df['HOUR']>= 16) & (df['HOUR']<= 19) & (df['DAY_OF_WEEK']>0)& (df['DAY_OF_WEEK']<6)]
