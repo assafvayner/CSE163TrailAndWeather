@@ -12,12 +12,14 @@ git push
 
 
 def commute_pattern(df):
-    #is_0 = df['DAY_OF_WEEK'] == 0
-    #is_6 = df['DAY_OF_WEEK'] == 6
-    morning_data = df[(df['HOUR']>= 7) & (df['HOUR']<= 10)& (df['DAY_OF_WEEK']>0)& (df['DAY_OF_WEEK']<6)]
-    #morning_data = morning_data[is_0| is_6]
-    evening_data = df[(df['HOUR']>= 16) & (df['HOUR']<= 19) & (df['DAY_OF_WEEK']>0)& (df['DAY_OF_WEEK']<6)]
-    #evening_data = evening_data[is_0| is_6]
+    is_0 = df['DAY_OF_WEEK'] == 0
+    is_6 = df['DAY_OF_WEEK'] == 6
+    morning_data = df[(df['HOUR']>= 7) & (df['HOUR']<= 10)]
+    morning_data = morning_data[is_0| is_6]
+    evening_data = df[(df['HOUR']>= 16) & (df['HOUR']<= 19)]
+    evening_data = evening_data[is_0| is_6]
+    # morning_data = df[(df['HOUR']>= 7) & (df['HOUR']<= 10)& (df['DAY_OF_WEEK']>0)& (df['DAY_OF_WEEK']<6)]
+    # evening_data = df[(df['HOUR']>= 16) & (df['HOUR']<= 19) & (df['DAY_OF_WEEK']>0)& (df['DAY_OF_WEEK']<6)]
     morning_indiv= morning_data.groupby(['YEAR','MONTH','DAY'])
     evening_indiv = evening_data.groupby(['YEAR','MONTH','DAY'])
     morning_diff = morning_indiv['Bike South'].sum() - morning_indiv['Bike North'].sum()
@@ -32,8 +34,6 @@ def commute_pattern(df):
             morning_list.append(0)
     morning_list = pd.Series(morning_list,name = 'Pattern')
     sm_morning_list = pd.Series(sm_morning_list, name = 'Morning Diff')
-    #new_morning_diff = pd.concat([sm_morning_list,morning_list],axis = 1)
-
     evening_list = []
     sm_evening_list = []
     for i in evening_diff:
@@ -44,7 +44,6 @@ def commute_pattern(df):
             evening_list.append(0)
     evening_list = pd.Series(evening_list,name = 'Pattern')
     sm_evening_list = pd.Series(sm_evening_list, name = 'Evening Diff')
-    #new_evening_diff = pd.concat([sm_evening_list,evening_list],axis = 1)
     count = 0
     for i in range(len(morning_list)):
         if morning_list[i] == 1:
@@ -60,11 +59,11 @@ def plot_pattern(df):
     df = df[(morning_data | evening_data) & days_of_week]
     df['diff'] = df.loc[:, 'Bike South'] - df.loc[:, 'Bike North']
     filtered_df = df.groupby(['HOUR'], as_index=False).mean()
-    filtered_df.plot(x='HOUR', y='diff', color = 'b', kind='bar')
+    sns.catplot(x='HOUR', y='diff', data = filtered_df, kind='bar')
     plt.title("Pattern of commuting days")
     plt.xlabel('Hour')
     plt.ylabel('Difference bettwen bike south and bike north')
-    plt.savefig('plots/test.png')
+    plt.savefig('plots/Commuter_Pattern.png',bbox_inches='tight')
 
 def main():
     dg = DataGetter()
