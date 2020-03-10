@@ -56,18 +56,20 @@ def commute_pattern(df):
 
 
 def plot_pattern(df):
-    filtered_df = df.groupby(['DAY_OF_WEEK','HOUR'])
-    value = filtered_df['Bike South'].sum()-filtered_df['Bike North'].sum()
-    # value = pd.DataFrame(value[0]).reset_index()
-    # value.columns = ['Hour', 'Mean']
-    # sns.relplot(x='Hour', y='Mean', data=value, kind='line')
-    # plt.savefig('test.png', bbox_inches='tight')
-    return value
+    days_of_week = (df['DAY_OF_WEEK'] > 0) & (df['DAY_OF_WEEK'] < 6)
+    morning_data = (df['HOUR']>= 7) & (df['HOUR']<= 10)
+    evening_data = (df['HOUR']>= 16) & (df['HOUR']<= 19)
+    df = df[(morning_data | evening_data) & days_of_week]
+    df['diff'] = df.loc[:, 'Bike South'] - df.loc[:, 'Bike North']
+    filtered_df = df.groupby(['HOUR'], as_index=False).mean()
+    filtered_df.plot(x='HOUR', y='diff', kind='bar')
+    plt.savefig('plots/test.png')
+
 def main():
     dg = DataGetter()
     df = dg.get_trail_data()
     print(commute_pattern(df))
-    print(plot_pattern(df).to_string())
+    plot_pattern(df)
 
 
 if __name__ == "__main__":
