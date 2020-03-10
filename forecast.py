@@ -5,6 +5,11 @@ from sklearn.model_selection import train_test_split
 
 
 def weather_predictor(df, do_print=False):
+    """
+    This function creates a DecisionTreeClassifier that predicts the weather
+    tag using the data from the trail dataset, if do_print is True, will
+    summary results
+    """
     df = df.dropna()
     X = df.loc[:, 'Total':'DAY_OF_WEEK']  # (df.columns != 'weather')] #
     y = df['weather']
@@ -21,7 +26,6 @@ def weather_predictor(df, do_print=False):
               str(100 * utils.error_rate(y_train, y_pred_train)) + '%')
         print('test set error rate: ' +
               str(100 * utils.error_rate(y_test, y_pred_test)) + '%')
-    return model
 
 
 def main():
