@@ -19,6 +19,8 @@ def pseudo_clock(df):
     print('peudo_clock')
     print(f'training set MSE: {mean_squared_error(y_train, y_pred_train)}')
     print(f'test set MSE: {mean_squared_error(y_test, y_pred_test)}')
+    error_analysis(y_test, y_pred_test)
+
 
 
 def pseudo_clock_NN(df):
@@ -37,6 +39,22 @@ def pseudo_clock_NN(df):
     print(f'training set MSE: {error_train}')
     error_test = mean_squared_error(y_test, y_pred_test)
     print(f'test set MSE: {error_test}')
+    error_analysis(y_test, y_pred_test)
+
+
+def error_analysis(true, pred):
+    true = true.to_numpy()
+    total = 0
+    # res = {i:[0,0] for i in range(1, 25)}
+    for (tr, pred) in zip(true, pred):
+        if abs(tr-pred) < 0.5:
+            total += 1
+            # res[tr][0] += 1
+        # res[tr][1] += 1
+    # res = {k:(val[0]/val[1]) for k, val in res.items() if val[0] > 0}
+    print(f'total: {total} proprotion: {total/len(true)}')
+    # for k in res:
+        # print(f'hour {k}: {res[k]} correct')
 
 
 def main():
@@ -47,9 +65,9 @@ def main():
     print('merged data')
     pseudo_clock(merged)
     pseudo_clock_NN(merged)
-    print('trail data')
-    pseudo_clock(trail_df)
-    pseudo_clock_NN(trail_df)
+    # print('trail data')
+    # pseudo_clock(trail_df)
+    # pseudo_clock_NN(trail_df)
 
 
 if __name__ == '__main__':
