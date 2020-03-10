@@ -69,7 +69,7 @@ def plot_pattern(df):
     plt.title("Pattern of commuting days")
     plt.xlabel('Hour')
     plt.ylabel('Difference bettwen bike south and bike north')
-    plt.savefig('plots/Commuter_Pattern.png',bbox_inches='tight')
+    plt.savefig('plots/commuter_pattern.png',bbox_inches='tight')
 
 def main():
     dg = DataGetter()
