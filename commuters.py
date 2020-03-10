@@ -18,6 +18,7 @@ def commute_pattern(df):
     morning_data = df[(df['HOUR']>= 7) & (df['HOUR']<= 10)& (df['DAY_OF_WEEK']>0)& (df['DAY_OF_WEEK']<6)]
     #morning_data = morning_data[is_0| is_6]
     evening_data = df[(df['HOUR']>= 16) & (df['HOUR']<= 19) & (df['DAY_OF_WEEK']>0)& (df['DAY_OF_WEEK']<6)]
+    #evening_data = evening_data[is_0| is_6]
     morning_indiv= morning_data.groupby(['YEAR','MONTH','DAY'])
     evening_indiv = evening_data.groupby(['YEAR','MONTH','DAY'])
     morning_diff = morning_indiv['Bike South'].sum() - morning_indiv['Bike North'].sum()
@@ -51,8 +52,6 @@ def commute_pattern(df):
             if morning_list[i] == evening_list[i]:
                 count+=1
     return count/len(morning_list)
-    #count/len(morning_list)
-    #& (df['DAY_OF_WEEK']>0)& (df['DAY_OF_WEEK']<6)
 
 
 def plot_pattern(df):
