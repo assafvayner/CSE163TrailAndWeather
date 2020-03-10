@@ -5,7 +5,6 @@ def error_rate(true_vals, predictions):
     bool_arr = true_vals[:] == predictions[:]
     return np.count_nonzero(~bool_arr) / len(bool_arr)
 
-
 def hasNaN(df):
     return len(df) != len(df.dropna())
 
