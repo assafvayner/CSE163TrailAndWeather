@@ -22,7 +22,7 @@ def graph_months(df):
                                 as_index=False)[month_df.columns[:5]].mean()
         graph_titles(ax, month)
         sns.barplot(x='DAY', y='Total', data=data, ax=ax)
-    fig.savefig('plots/monthly.png')
+    fig.savefig('plots/monthly.png', bbox_inches='tight')
 
 
 def graph_day(df, month, month_index, res):
@@ -42,7 +42,7 @@ def graph_day(df, month, month_index, res):
     graph_titles(ax2, None, True)
     sns.barplot(ax=ax1, x='DAY', y='Total', data=user_month_grouped)
     graph_titles(ax1, month_index - 1)
-    fig.savefig('plots/' + month.lower() + '.png')
+    fig.savefig('plots/' + month.lower() + '.png', bbox_inches='tight')
 
 
 def graph_titles(ax, month, day=False):
@@ -82,6 +82,8 @@ def lowest(df, month=None):
     the lowest hour (hour by hour) and outputs the lowest hour for that month
     """
     if month is not None and month_to_index(month) is None:
+        print('Invalid month name')
+        get_lowest_for_user(df)
         return
     res = dict()
     grouped_by_month = df.groupby('MONTH')
@@ -134,6 +136,11 @@ def month_to_index(month, Jan_is_one=False):
 
 
 def get_lowest_for_user(trail_df):
+    """
+    Prompts the user for a month. Calls lowest to print and plot the hour of
+    the month with the lowest trail usage. If 'ALL' is specified instead of a
+    month, the lowest hour for all months is plotted and printed.
+    """
     print('This function will give you the time with the least number of '
           + 'people on the trail')
     inp = input('type the month name or \'ALL\' for all months: ')
@@ -142,9 +149,10 @@ def get_lowest_for_user(trail_df):
     else:
         lowest(trail_df, inp)
 
+
 def main():
     """
-    Imports data, sets up seaborn, and calls the lowest function
+    Imports data, sets up seaborn, and calls the user input function
     """
     dg = DataGetter()
     trail_data = dg.get_trail_data()
