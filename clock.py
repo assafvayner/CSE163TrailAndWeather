@@ -1,4 +1,4 @@
-from data_getter import DataGetter
+import data_getter as dg
 import utils
 import pandas as pd
 from sklearn.tree import DecisionTreeRegressor
@@ -52,9 +52,8 @@ def pseudo_clock_NN(df):
 
 
 def main():
-    data_getter = DataGetter()
-    trail_df, weather_df = data_getter.get_data()
-    merged = data_getter.merge_dataframes(trail_df, weather_df)
+    trail_df, weather_df = dg.get_data()
+    merged = dg.merge_dataframes(trail_df, weather_df)
     utils.print_heads(trail_df, weather_df, merged)
     print('merged data')
     pseudo_clock(merged)

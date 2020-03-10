@@ -1,4 +1,4 @@
-from data_getter import DataGetter
+import data_getter as dg
 import utils
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
@@ -29,9 +29,8 @@ def weather_predictor(df, do_print=False):
 
 
 def main():
-    data_getter = DataGetter()
-    trail_df, weather_df = data_getter.get_data()
-    merged = data_getter.merge_dataframes(trail_df, weather_df)
+    trail_df, weather_df = dg.get_data()
+    merged = dg.merge_dataframes(trail_df, weather_df)
     utils.print_heads(trail_df, weather_df, merged)
     weather_predictor(merged, True)
 
