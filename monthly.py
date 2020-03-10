@@ -79,7 +79,9 @@ def lowest(df, month=None):
     Calculates the lowest hour for every month of the year. If no month is
     specified, graphs all 365 days and prints the lowest hour of each month.
     If month is specified, graphs that month (day by day) and the day with
-    the lowest hour (hour by hour) and outputs the lowest hour for that month
+    the lowest hour (hour by hour) and outputs the lowest hour for that month.
+    If the month specified by the user is not a valid month name, returns an
+    error and reprompts the user
     """
     if month is not None and month_to_index(month) is None:
         print('Invalid month name')
