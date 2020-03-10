@@ -1,4 +1,4 @@
-from data_getter import DataGetter
+import data_getter as dg
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -156,7 +156,6 @@ def main():
     """
     Imports data, sets up seaborn, and calls the user input function
     """
-    dg = DataGetter()
     trail_data = dg.get_trail_data()
     sns.set()
     get_lowest_for_user(trail_data)
