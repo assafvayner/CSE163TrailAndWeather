@@ -3,23 +3,24 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-"""
-Command:
-git add "file_name"
-git commit -m "What you changed"
-git push
-"""
-
 
 def commute_pattern(df):
-    is_0 = df['DAY_OF_WEEK'] == 0
-    is_6 = df['DAY_OF_WEEK'] == 6
-    morning_data = df[(df['HOUR']>= 7) & (df['HOUR']<= 10)]
-    morning_data = morning_data[is_0| is_6]
-    evening_data = df[(df['HOUR']>= 16) & (df['HOUR']<= 19)]
-    evening_data = evening_data[is_0| is_6]
-    # morning_data = df[(df['HOUR']>= 7) & (df['HOUR']<= 10)& (df['DAY_OF_WEEK']>0)& (df['DAY_OF_WEEK']<6)]
-    # evening_data = df[(df['HOUR']>= 16) & (df['HOUR']<= 19) & (df['DAY_OF_WEEK']>0)& (df['DAY_OF_WEEK']<6)]
+    """
+    It should take the file and filter it so it can be seperated by days and hours.
+    in the morning, if bike south is more than bike north, it should return 1;
+    in the evening, if bike north is more than bike south, it should return 1;
+    if in a day, both morning and evening returns 1, the day should return 1,
+    else, return 0.
+    It should end up calculating the percentage of days that returns 1
+    """
+    # is_0 = df['DAY_OF_WEEK'] == 0
+    # is_6 = df['DAY_OF_WEEK'] == 6
+    # morning_data = df[(df['HOUR']>= 7) & (df['HOUR']<= 10)]
+    # morning_data = morning_data[is_0| is_6]
+    # evening_data = df[(df['HOUR']>= 16) & (df['HOUR']<= 19)]
+    # evening_data = evening_data[is_0| is_6]
+    morning_data = df[(df['HOUR']>= 7) & (df['HOUR']<= 10)& (df['DAY_OF_WEEK']>0)& (df['DAY_OF_WEEK']<6)]
+    evening_data = df[(df['HOUR']>= 16) & (df['HOUR']<= 19) & (df['DAY_OF_WEEK']>0)& (df['DAY_OF_WEEK']<6)]
     morning_indiv= morning_data.groupby(['YEAR','MONTH','DAY'])
     evening_indiv = evening_data.groupby(['YEAR','MONTH','DAY'])
     morning_diff = morning_indiv['Bike South'].sum() - morning_indiv['Bike North'].sum()
@@ -53,6 +54,11 @@ def commute_pattern(df):
 
 
 def plot_pattern(df):
+    """
+    plot the graph with x-axis of commuting hours
+    and y-axis of the number of difference of people
+    biking south and biking north.
+    """
     days_of_week = (df['DAY_OF_WEEK'] > 0) & (df['DAY_OF_WEEK'] < 6)
     morning_data = (df['HOUR']>= 7) & (df['HOUR']<= 10)
     evening_data = (df['HOUR']>= 16) & (df['HOUR']<= 19)
