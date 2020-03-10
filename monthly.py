@@ -81,6 +81,8 @@ def lowest(df, month=None):
     If month is specified, graphs that month (day by day) and the day with
     the lowest hour (hour by hour) and outputs the lowest hour for that month
     """
+    if month is not None and month_to_index(month) is None:
+        return
     res = dict()
     grouped_by_month = df.groupby('MONTH')
     for k, gb in grouped_by_month:
@@ -131,6 +133,15 @@ def month_to_index(month, Jan_is_one=False):
     return months.index(month) + Jan_is_one
 
 
+def get_lowest_for_user(trail_df):
+    print('This function will give you the time with the least number of '
+          + 'people on the trail')
+    inp = input('type the month name or \'ALL\' for all months: ')
+    if inp.upper() == 'ALL':
+        lowest(trail_df)
+    else:
+        lowest(trail_df, inp)
+
 def main():
     """
     Imports data, sets up seaborn, and calls the lowest function
@@ -138,8 +149,7 @@ def main():
     dg = DataGetter()
     trail_data = dg.get_trail_data()
     sns.set()
-    lowest(trail_data, 'October')
-    lowest(trail_data)
+    get_lowest_for_user(trail_data)
 
 
 if __name__ == '__main__':
