@@ -1,12 +1,11 @@
 import data_getter as dg
-import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def commute_pattern(df):
+def commute_pattern(morning_data, evening_data):
     """
-    It should take the file and filter so it can be
+    It should take the dataframe and filter so it can be
     seperated by days and hours.
     in the morning, if bike south is more than bike north, it should return 1;
     in the evening, if bike north is more than bike south, it should return 1;
@@ -14,48 +13,32 @@ def commute_pattern(df):
     else, return 0.
     It should end up calculating the percentage of days that returns 1
     """
-    # is_0 = df['DAY_OF_WEEK'] == 0
-    # is_6 = df['DAY_OF_WEEK'] == 6
-    # morning_data = df[(df['HOUR']>= 7) & (df['HOUR']<= 10)]
-    # morning_data = morning_data[is_0| is_6]
-    # evening_data = df[(df['HOUR']>= 16) & (df['HOUR']<= 19)]
-    # evening_data = evening_data[is_0| is_6]
-    morning_data = df[(df['HOUR'] >= 7) & (df['HOUR'] <= 10) &
-                      (df['DAY_OF_WEEK'] > 0) & (df['DAY_OF_WEEK'] < 6)]
-    evening_data = df[(df['HOUR'] >= 16) & (df['HOUR'] <= 19)
-                      & (df['DAY_OF_WEEK'] > 0) & (df['DAY_OF_WEEK'] < 6)]
     morning_indiv = morning_data.groupby(['YEAR', 'MONTH', 'DAY'])
     evening_indiv = evening_data.groupby(['YEAR', 'MONTH', 'DAY'])
     morning_diff = morning_indiv['Bike South'
                                  ].sum() - morning_indiv['Bike North'].sum()
     evening_diff = evening_indiv['Bike North'
                                  ].sum() - evening_indiv['Bike South'].sum()
-    morning_list = []
-    sm_morning_list = []
-    for i in morning_diff:
-        sm_morning_list.append(i)
-        if i > 0:
-            morning_list.append(1)
-        else:
-            morning_list.append(0)
-    morning_list = pd.Series(morning_list, name='Pattern')
-    sm_morning_list = pd.Series(sm_morning_list, name='Morning Diff')
-    evening_list = []
-    sm_evening_list = []
-    for i in evening_diff:
-        sm_evening_list.append(i)
-        if i > 0:
-            evening_list.append(1)
-        else:
-            evening_list.append(0)
-    evening_list = pd.Series(evening_list, name='Pattern')
-    sm_evening_list = pd.Series(sm_evening_list, name='Evening Diff')
-    count = 0
-    for i in range(len(morning_list)):
-        if morning_list[i] == 1:
-            if morning_list[i] == evening_list[i]:
-                count += 1
-    return count/len(morning_list)
+    m_list = [1 if i > 0 else 0 for i in morning_diff.tolist()]
+    e_list = [1 if i > 0 else 0 for i in evening_diff.tolist()]
+    count = sum([1 for m, e in zip(m_list, e_list) if m == e and m == 1])
+    return count / len(m_list)
+
+
+def filter_weekend(df):
+    is_0 = df['DAY_OF_WEEK'] == 0
+    is_6 = df['DAY_OF_WEEK'] == 6
+    morning_data = df[(df['HOUR'] >= 7) & (df['HOUR'] <= 10) & (is_0 | is_6)]
+    evening_data = df[(df['HOUR'] >= 16) & (df['HOUR'] <= 19) & (is_0 | is_6)]
+    return morning_data, evening_data
+
+
+def filter_weekday(df):
+    morning_data = df[(df['HOUR'] >= 7) & (df['HOUR'] <= 10) &
+                      (df['DAY_OF_WEEK'] > 0) & (df['DAY_OF_WEEK'] < 6)]
+    evening_data = df[(df['HOUR'] >= 16) & (df['HOUR'] <= 19)
+                      & (df['DAY_OF_WEEK'] > 0) & (df['DAY_OF_WEEK'] < 6)]
+    return morning_data, evening_data
 
 
 def plot_pattern(df):
@@ -82,7 +65,11 @@ def plot_pattern(df):
 def main():
     df = dg.get_trail_data()
     print('percent of weekdays exhibiting commuting pattern: ', end='')
-    print(str(100 * commute_pattern(df)) + '%')
+    weekday_m, weekday_e = filter_weekday(df)
+    print(str(100 * commute_pattern(weekday_m, weekday_e)) + '%')
+    print('percent of weekend days exhibiting commuting pattern: ', end='')
+    weekend_m, weekend_e = filter_weekend(df)
+    print(str(100 * commute_pattern(weekend_m, weekend_e)) + '%')
     plot_pattern(df)
 
 
