@@ -9,6 +9,7 @@ Collaborators: Qilong Du, Zane Priebe, Assaf Vayner
 ## Datasets:
 Burke Gilman Trail Data from link below, produced by city of Seattle
 https://catalog.data.gov/dataset/burke-gilman-trail-north-of-ne-70th-st-bike-and-ped-counter-aa37e
+
 Seattle weather taken from vega-datasets on github, link below:
 https://vega.github.io/vega-datasets/
 
