@@ -31,7 +31,7 @@ def weather_predictor(df, do_print=False):
 def main():
     trail_df, weather_df = dg.get_data()
     merged = dg.merge_dataframes(trail_df, weather_df)
-    utils.print_heads(trail_df, weather_df, merged)
+    # utils.print_heads(trail_df, weather_df, merged)
     weather_predictor(merged, True)
 
 
