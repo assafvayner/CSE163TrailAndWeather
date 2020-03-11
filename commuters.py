@@ -2,6 +2,9 @@ import data_getter as dg
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# morning is defined as 7 am to 10 am inclusive
+# evening is defined as 4 pm to 7 pm inclusive
+
 
 def commute_pattern(morning_data, evening_data):
     """
@@ -26,6 +29,10 @@ def commute_pattern(morning_data, evening_data):
 
 
 def filter_weekend(df):
+    """
+    filters data for weekend days and the hours defined as morning and evening
+    and returns the morning and evening data in separate dataframes
+    """
     is_0 = df['DAY_OF_WEEK'] == 0
     is_6 = df['DAY_OF_WEEK'] == 6
     morning_data = df[(df['HOUR'] >= 7) & (df['HOUR'] <= 10) & (is_0 | is_6)]
@@ -34,6 +41,10 @@ def filter_weekend(df):
 
 
 def filter_weekday(df):
+    """
+    filters data for weekdays and the hours defined as morning and evening
+    and returns the morning and evening data in separate dataframes
+    """
     morning_data = df[(df['HOUR'] >= 7) & (df['HOUR'] <= 10) &
                       (df['DAY_OF_WEEK'] > 0) & (df['DAY_OF_WEEK'] < 6)]
     evening_data = df[(df['HOUR'] >= 16) & (df['HOUR'] <= 19)
