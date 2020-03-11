@@ -54,7 +54,7 @@ def pseudo_clock_NN(df):
 def main():
     trail_df, weather_df = dg.get_data()
     merged = dg.merge_dataframes(trail_df, weather_df)
-    utils.print_heads(trail_df, weather_df, merged)
+    utils.print_heads(merged=merged)
     print('merged data')
     pseudo_clock(merged)
     pseudo_clock_NN(merged)
