@@ -30,7 +30,6 @@ def pseudo_clock(df):
     error_analysis(y_test, y_pred_test)
 
 
-
 def pseudo_clock_NN(df):
     """
     Trains a Neural Network Regressor to predict the hour and reports
@@ -57,23 +56,17 @@ def pseudo_clock_NN(df):
 def error_analysis(true, pred):
     true = true.to_numpy()
     total = 0
-    # res = {i:[0,0] for i in range(1, 25)}
     for (tr, pred) in zip(true, pred):
         if abs(tr-pred) < 0.5:
             total += 1
-            # res[tr][0] += 1
-        # res[tr][1] += 1
-    # res = {k:(val[0]/val[1]) for k, val in res.items() if val[0] > 0}
-    print(f'total: {total} proprotion: {total/len(true)}')
-    # for k in res:
-        # print(f'hour {k}: {res[k]} correct')
+    print(f'total correct: {total} percent correct: {100 * total/len(true)}%')
 
 
 def main():
     trail_df, weather_df = dg.get_data()
     merged = dg.merge_dataframes(trail_df, weather_df)
-    utils.print_heads(merged=merged)
-    print('merged data')
+    # utils.print_heads(merged=merged)
+    # print('merged data')
     pseudo_clock(merged)
     pseudo_clock_NN(merged)
     # print('trail data')

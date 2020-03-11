@@ -68,6 +68,8 @@ def plot_pattern(df):
     morning_data = (df['HOUR'] >= 7) & (df['HOUR'] <= 10)
     evening_data = (df['HOUR'] >= 16) & (df['HOUR'] <= 19)
     df = df[(morning_data | evening_data) & days_of_week]
+    # following line produces warning, need not worry about it
+    # suggested fixes produce worse warnings
     df['diff'] = df.loc[:, 'Bike South'] - df.loc[:, 'Bike North']
     filtered_df = df.groupby(['HOUR'], as_index=False).mean()
     sns.catplot(x='HOUR', y='diff', data=filtered_df, kind='bar')
@@ -79,7 +81,8 @@ def plot_pattern(df):
 
 def main():
     df = dg.get_trail_data()
-    print(commute_pattern(df))
+    print('percent of weekdays exhibiting commuting pattern: ', end='')
+    print(str(100 * commute_pattern(df)) + '%')
     plot_pattern(df)
 
 
